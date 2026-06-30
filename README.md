@@ -1,6 +1,6 @@
-# phonetic
+# soundex
 
-A small, header-only **phonetic Soundex** library for C++20, extracted from
+A small, header-only **Soundex** library for C++20, extracted from
 [Xapiand](https://github.com/Kronuz/Xapiand). It encodes a word into a
 language-specific phonetic code so that words that sound alike collapse to the
 same string.
@@ -45,16 +45,16 @@ With CMake `FetchContent`:
 ```cmake
 include(FetchContent)
 FetchContent_Declare(
-  phonetic
-  GIT_REPOSITORY https://github.com/Kronuz/phonetic.git
+  soundex
+  GIT_REPOSITORY https://github.com/Kronuz/soundex.git
   GIT_TAG        main
 )
-FetchContent_MakeAvailable(phonetic)
+FetchContent_MakeAvailable(soundex)
 
-target_link_libraries(your_target PRIVATE phonetic::phonetic)
+target_link_libraries(your_target PRIVATE soundex::soundex)
 ```
 
-The `phonetic` target is a pure `INTERFACE` library: it compiles nothing,
+The `soundex` target is a pure `INTERFACE` library: it compiles nothing,
 requests `cxx_std_20`, puts the header directory on your include path, and links
 `strings` so `"strings.hh"` resolves with no extra wiring. Then:
 
@@ -104,7 +104,7 @@ The first configure fetches `strings` (and its own dependency chain) over the
 network. The test encodes representative words in each of the four languages and
 asserts the exact codes this implementation produces, including the homophone
 collapse (`Robert`/`Rupert`, `Vaca`/`Baca`), leading-character stripping, and the
-empty-input case. It prints `all phonetic tests passed` and exits 0.
+empty-input case. It prints `all soundex tests passed` and exits 0.
 
 ## Examples
 
@@ -112,7 +112,7 @@ empty-input case. It prints `all phonetic tests passed` and exits 0.
 produces it next to the test:
 
 ```sh
-cmake -B build && cmake --build build && ./build/phonetic_demo
+cmake -B build && cmake --build build && ./build/soundex_demo
 ```
 
 It prints a handful of encodings per language.
@@ -124,7 +124,7 @@ copied as-is, with one decoupling delta: the base `Soundex` had `serialise()` /
 `unserialise()` methods that persisted the encoder's configured code into a
 Xapiand index, pulling in `"length.h"` (Xapiand's varint serializer) and
 `"xapian/common/serialise-double.h"` (a GPL Xapian helper). Those methods and
-both includes were removed; the standalone library is the pure phonetic
+both includes were removed; the standalone library is the pure Soundex
 algorithm. The only remaining local include, `"strings.hh"`, is wired to the
 standalone [strings](https://github.com/Kronuz/strings) library through CMake. See
 [ARCHITECTURE.md](ARCHITECTURE.md) for the design and [AGENTS.md](AGENTS.md) for

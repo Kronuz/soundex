@@ -1,7 +1,7 @@
 // A runnable tour of the phonetic Soundex encoders.
 //
 // Build (when this repo is the top-level project):
-//   cmake -B build && cmake --build build && ./build/phonetic_demo
+//   cmake -B build && cmake --build build && ./build/soundex_demo
 //
 // The one idea worth taking away: each SoundexXxx class turns a word into a
 // language-specific phonetic code, so two words that sound alike collapse to the
@@ -34,7 +34,7 @@ static void show_es(const char* word) {
 }
 
 int main() {
-	std::puts("phonetic demo");
+	std::puts("soundex demo");
 
 	rule("English (refined soundex): similar-sounding names collapse");
 	show_en("Robert");

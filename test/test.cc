@@ -121,6 +121,6 @@ int main() {
 	test_french();
 	test_german();
 	test_spanish();
-	std::printf("all phonetic tests passed\n");
+	std::printf("all soundex tests passed\n");
 	return 0;
 }

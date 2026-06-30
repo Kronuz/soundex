@@ -1,6 +1,6 @@
 # Architecture
 
-The internal design of `phonetic`: a CRTP base plus four per-language Soundex
+The internal design of `soundex`: a CRTP base plus four per-language Soundex
 encoders, all inline in headers. For usage see `README.md`; for the repo map and
 invariants see `AGENTS.md`.
 

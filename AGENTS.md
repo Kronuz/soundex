@@ -15,7 +15,7 @@ german_soundex.h             SoundexGerman (Kölner Phonetik). Header.
 spanish_soundex.h            SoundexSpanish. Header.
 test/test.cc                 Runnable smoke test: encodes words in all four languages, asserts exact codes.
 examples/demo.cc             Runnable tour (not a test): prints encodings per language.
-CMakeLists.txt               INTERFACE library `phonetic` (+ alias phonetic::phonetic); links strings; CTest test `phonetic`.
+CMakeLists.txt               INTERFACE library `soundex` (+ alias soundex::soundex); links strings; CTest test `soundex`.
 LICENSE                      MIT, Copyright (c) 2015-2019 Dubalu LLC.
 README.md                    What it is, install, usage.
 ARCHITECTURE.md              Internal design: the CRTP base, the four encoders, what was stripped.
@@ -33,8 +33,8 @@ cmake -B build && cmake --build build && ctest --test-dir build
 
 The first configure fetches `strings` (and its dependency chain) over the
 network, so the configure step needs network access. Expected output ends with
-`all phonetic tests passed`, exit 0. The test target is `phonetic_test`; the
-registered CTest name is `phonetic`. A `phonetic_demo` target builds alongside.
+`all soundex tests passed`, exit 0. The test target is `soundex_test`; the
+registered CTest name is `soundex`. A `soundex_demo` target builds alongside.
 
 ## Conventions
 

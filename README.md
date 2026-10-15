@@ -1,5 +1,7 @@
 # soundex
 
+[![CI](https://github.com/Kronuz/soundex/actions/workflows/ci.yml/badge.svg)](https://github.com/Kronuz/soundex/actions/workflows/ci.yml)
+
 A small, header-only **Soundex** library for C++20, extracted from
 [Xapiand](https://github.com/Kronuz/Xapiand). It encodes a word into a
 language-specific phonetic code so that words that sound alike collapse to the

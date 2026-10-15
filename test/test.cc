@@ -23,8 +23,8 @@
 static void check(const char* lang, const char* word,
                   const std::string& got, const std::string& want) {
 	if (got != want) {
-		std::printf("FAIL [%s] %-12s got '%s' want '%s'\n",
-		            lang, word, got.c_str(), want.c_str());
+		std::fprintf(stderr, "FAIL [%s] %-12s got '%s' want '%s'\n",
+		             lang, word, got.c_str(), want.c_str());
 		assert(false && "soundex code mismatch");
 	}
 	std::printf("  ok [%s] %-12s -> %s\n", lang, word, got.c_str());

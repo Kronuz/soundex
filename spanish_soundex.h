@@ -27,7 +27,8 @@
 #include <stdexcept>             // for std::out_of_range
 #include <string>                // for std::string
 #include <string_view>           // for std::string_view
-#include <unordered_map>         // for std::unordered_map
+#include <unordered_map>
+#include <vector>         // for std::unordered_map
 #include <utility>               // for std::forward
 
 #include "strings.hh"            // for strings::inplace_upper
@@ -43,7 +44,8 @@ static const std::unordered_map<std::string, std::string> spanish_accents({
 });
 
 
-static const std::unordered_map<std::string, std::string> spanish_composed({
+// Applied in this order; overlapping rules ("NY" and "YA") must not depend on hash order.
+static const std::vector<std::pair<std::string, std::string>> spanish_composed({
 	{ "CH", "V" }, { "QU", "K" }, { "LL", "J" }, { "CE", "S" },
 	{ "CI", "S" }, { "YA", "J" }, { "YE", "J" }, { "YI", "J" },
 	{ "YO", "J" }, { "YU", "J" }, { "GE", "J" }, { "GI", "J" },

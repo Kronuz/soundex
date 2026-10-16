@@ -1,0 +1,19 @@
+# soundex: words that sound alike collapse to one code, per language.
+# Render: d2 --layout elk --sketch --theme 302 docs/soundex.d2 docs/soundex.svg
+direction: right
+
+robert: '"Robert"'
+rupert: '"Rupert"'
+en: SoundexEnglish
+code_en: '"R901096"'
+vaca: '"Vaca"'
+baca: '"Baca"'
+es: SoundexSpanish
+code_es: '"B1020"'
+
+robert -> en
+rupert -> en
+en -> code_en
+vaca -> es
+baca -> es
+es -> code_es

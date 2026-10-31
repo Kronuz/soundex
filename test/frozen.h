@@ -1,6 +1,5 @@
-// Frozen copy of the pre-optimization SoundexEnglish::_encode (in-place
-// erase/insert). The reference for the differential test and the benchmark;
-// do not "improve" it.
+// Reference SoundexEnglish::_encode (in-place erase/insert): the oracle for the
+// differential test and the benchmark. Keep it unchanged.
 #pragma once
 
 #include <cctype>

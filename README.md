@@ -70,6 +70,7 @@ int main() {
 
 - [docs/API.md](docs/API.md): the encoders, their references, and usage.
 - [ARCHITECTURE.md](ARCHITECTURE.md): the CRTP base and each language's rules.
+- [CHANGELOG.md](CHANGELOG.md): changes by date.
 - [AGENTS.md](AGENTS.md): repository map and traps.
 
 ## 🛠️ Building and testing
@@ -77,20 +78,18 @@ int main() {
 ```sh
 cmake -B build && cmake --build build && ctest --test-dir build
 ./build/soundex_demo
+./build/soundex_bench   # SoundexEnglish against the reference test/frozen.h
 ```
+
+`test/diff_test.cc` checks `SoundexEnglish` against the reference in-place
+erase/insert encoder in `test/frozen.h`, over every string up to four characters of
+a mixed alphabet plus random strings.
 
 ## 🤝 Contributing
 
 Issues and pull requests are welcome. Codes are stored in indexes, so encodings
 must not change; read [AGENTS.md](AGENTS.md) first. CI must pass on every
 platform.
-
-## Performance note
-
-`SoundexEnglish` encodes in one pass into a fresh string through a 256-entry class table
-(`test/diff_test.cc` checks it against the original in-place erase/insert code over every
-string up to four characters of a mixed alphabet plus random strings). `./build/soundex_bench`
-times both.
 
 ## 📄 License
 

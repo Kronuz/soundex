@@ -20,7 +20,7 @@ LICENSE                      MIT, Copyright (c) 2015-2019 Dubalu LLC.
 README.md                    What it is, install, quick start.
 docs/API.md                  The four encoders, their references, and usage.
 docs/soundex.d2              The README diagram's source (docs/soundex.svg is rendered from it).
-ARCHITECTURE.md              Internal design: the CRTP base, the four encoders, what was stripped.
+ARCHITECTURE.md              Internal design: the CRTP base, the four encoders, the delta from Xapiand.
 ```
 
 Everything is header-only. There is no `.cc` to compile except the test and the
@@ -94,8 +94,8 @@ de-vendors, it keeps that adapter on its own side.
 
 - **`static const` tables are per-TU.** Each table (`french_accents`,
   `german_composed`, ...) is `static const` at namespace scope, so every
-  translation unit including the header gets its own copy. That is the original
-  Xapiand shape; it is fine for these small constant maps, but don't be surprised
+  translation unit including the header gets its own copy, as in Xapiand. That is
+  fine for these small constant maps, but don't be surprised
   by the duplication, and don't drop the `static` (it would cause ODR clashes
   across TUs).
 - **Spanish uses `try`/`catch`.** `spanish_soundex.h` catches `std::out_of_range`
@@ -105,9 +105,10 @@ de-vendors, it keeps that adapter on its own side.
 ## Standalone vs. Xapiand
 
 This is a standalone extraction from
-[Xapiand](https://github.com/Kronuz/Xapiand). The encoders were copied as-is; the
-only decoupling delta is the removal of the base's serialise/unserialise (and
-their `length.h` + GPL `serialise-double.h` includes), plus wiring the one local
-include `"strings.hh"` to the standalone
-[strings](https://github.com/Kronuz/strings) library through CMake. Any change
-here should stay reconcilable with upstream.
+[Xapiand](https://github.com/Kronuz/Xapiand). It differs from upstream in four
+ways: the base has no serialise/unserialise (and no `length.h` or GPL
+`serialise-double.h` include); the one local include, `"strings.hh"`, resolves to
+the standalone [strings](https://github.com/Kronuz/strings) library through CMake;
+the German and Spanish two-letter rules are ordered vectors, so codes match across
+platforms; and `SoundexEnglish` encodes in one pass through a class table, with
+output identical to upstream's. Keep any change reconcilable with upstream.

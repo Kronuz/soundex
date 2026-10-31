@@ -1,4 +1,4 @@
-// Benchmark: SoundexEnglish::encode against the frozen original (test/frozen.h)
+// Benchmark: SoundexEnglish::encode against the reference encoder (test/frozen.h)
 // on pseudo-words of 3 to 12 letters.
 //
 // Build: cmake -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build --target soundex_bench

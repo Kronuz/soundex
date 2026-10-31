@@ -46,14 +46,15 @@ matching prefix using `std::mismatch`. These are how the language tables
 
 ## The four encoders
 
-Each `_encode` is a straight-line transform over a `std::string`, returning the
-code. They share a rough skeleton but differ in the tables and the digit map:
+Each `_encode` is a straight-line transform of the input, returning the code. They share a rough skeleton but differ in the tables and the digit map:
 
 - **English** is the simplest: strip leading non-letters, keep the first letter
   upper-cased and literal, then walk the rest mapping each letter class to a
   digit (`b/p -> 1`, ... `r -> 9`, vowels/`h/w/y -> 0`), collapsing runs of the
   same digit. It is the *refined* map, so it has more buckets than classic
-  Soundex and keeps vowels as `0`, which is why the codes are long.
+  Soundex and keeps vowels as `0`, which is why the codes are long. It reads a
+  `std::string_view` once, looks each byte's class up in a 256-entry table, and
+  writes the code into a new string.
 
 - **French** (Soundex 2) folds accents from `french_accents`, upper-cases via
   `strings::inplace_upper`, keeps only `A-Z`, applies the `french_composed`
@@ -75,17 +76,17 @@ code. They share a rough skeleton but differ in the tables and the digit map:
 
 The per-language tables (`french_accents`, `german_composed`, `spanish_composed`,
 ...) are `static const` namespace-scope maps/vectors defined in each header. They
-are `static`, so each translation unit that includes the header gets its own copy;
-that is the original Xapiand shape, preserved here.
+are `static`, so each translation unit that includes the header gets its own copy,
+as in Xapiand. The two-letter rule tables are vectors applied in declaration order,
+so overlapping rules code a word the same way on every platform.
 
-## What was removed in extraction
+## Delta from Xapiand
 
-The base `Soundex` in Xapiand had `virtual serialise()` / `unserialise()` methods
-that persisted `_code_str` into a Xapiand index, using `serialise_string` /
-`unserialise_string` from `"length.h"` (Xapiand's varint serializer) and pulling
-in `"xapian/common/serialise-double.h"` (a GPL Xapian helper). None of that is
-part of the phonetic algorithm: it is how Xapiand stored a configured encoder.
-The two methods and both includes were dropped, so the base is now non-virtual
-and depends only on `<string>`, `<string_view>`, `<utility>`, and `<algorithm>`
-(for `std::mismatch`). Xapiand keeps its own serialise adapter when it eventually
-de-vendors this; that is not this library's concern.
+The base `Soundex` in Xapiand has `virtual serialise()` / `unserialise()` methods
+that persist `_code_str` into a Xapiand index, using `serialise_string` /
+`unserialise_string` from `"length.h"` (Xapiand's varint serializer) and
+`"xapian/common/serialise-double.h"` (a GPL Xapian helper). That is how Xapiand
+stores a configured encoder, outside the phonetic algorithm. This base has neither
+method nor include: it is non-virtual and depends only on `<string>`,
+`<string_view>`, `<utility>`, and `<algorithm>` (for `std::mismatch`). A consumer
+that persists encoders keeps its own serialise adapter.

@@ -1,6 +1,5 @@
-// Differential test: the optimized SoundexEnglish must produce exactly what the
-// original in-place erase/insert implementation produced. frozen_encode (frozen.h) is
-// a verbatim copy of that original. Inputs: every string of length <= 4 over a
+// Differential test: SoundexEnglish must produce exactly what the reference
+// in-place erase/insert encoder, frozen_encode (frozen.h), produces. Inputs: every string of length <= 4 over a
 // small alphabet (letters of each class, digits, space, high bytes, NUL), plus
 // random strings and every dictionary-like random word.
 //

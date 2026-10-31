@@ -28,7 +28,7 @@
 #include <string>                // for std::string
 #include <string_view>           // for std::string_view
 #include <unordered_map>
-#include <vector>         // for std::unordered_map
+#include <vector>         // for std::vector
 #include <utility>               // for std::forward
 
 #include "strings.hh"            // for strings::inplace_upper
@@ -41,8 +41,7 @@ static const std::unordered_map<std::string, std::string> german_accents({
 
 
 // Applied in order: Kölner Phonetik codes C after S or Z, and D or T before C, S, or Z, as
-// 8 before C before A, H, K, O, Q, U, or X as 4 ("Schmidt" is 8602). An unordered map
-// applied them in each standard library's hash order.
+// 8 before C before A, H, K, O, Q, U, or X as 4 ("Schmidt" is 8602).
 static const std::vector<std::pair<std::string, std::string>> german_composed({
 	{ "DC", "8" }, { "DS", "8" }, { "DZ", "8" }, { "TC", "8" },
 	{ "TS", "8" }, { "TZ", "8" }, { "SC", "8" }, { "ZC", "8" },

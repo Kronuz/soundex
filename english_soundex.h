@@ -25,6 +25,7 @@
 
 #include "soundex.h"
 
+#include <array>                // for std::array
 #include <cctype>                // for std::toupper
 #include <string>                // for std::string
 #include <string_view>           // for std::string_view
@@ -41,144 +42,56 @@ class SoundexEnglish : public Soundex<SoundexEnglish> {
 
 	friend class Soundex<SoundexEnglish>;
 
-	std::string _encode(std::string str) const {
-		// 1. Remove all non alphabetic characters at the begin.
-		auto it = str.begin();
-		while (it != str.end()) {
-			if ((*it >= 'a' && *it <= 'z') || (*it >= 'A' && *it <= 'Z')) {
-				break;
-			} else {
-				it = str.erase(it);
+	// Code class of each byte: '0'..'9' for the letter classes, 0 for any
+	// byte that is not an ASCII letter (those are dropped).
+	static constexpr std::array<char, 256> _classes = [] {
+		std::array<char, 256> t{};
+		auto set = [&t](const char* letters, char code) {
+			for (; *letters; ++letters) {
+				t[static_cast<unsigned char>(*letters)] = code;
+				t[static_cast<unsigned char>(*letters) - 'a' + 'A'] = code;
+			}
+		};
+		set("bp", '1');
+		set("fv", '2');
+		set("cks", '3');
+		set("gj", '4');
+		set("qxz", '5');
+		set("dt", '6');
+		set("l", '7');
+		set("mn", '8');
+		set("r", '9');
+		set("aehiouwy", '0');
+		return t;
+	}();
+
+	std::string _encode(std::string_view str) const {
+		// 1. Skip all non alphabetic characters at the begin.
+		size_t i = 0;
+		while (i < str.size() && !_classes[static_cast<unsigned char>(str[i])]) {
+			++i;
+		}
+
+		std::string res;
+		if (i == str.size()) {
+			return res;
+		}
+
+		// 2. Starts the calculation of Soundex: the upper case first letter,
+		// then one code per letter, dropping non letters and any code equal to
+		// the one right before it.
+		res.reserve(str.size() - i + 1);
+		res.push_back(static_cast<char>(std::toupper(static_cast<unsigned char>(str[i]))));
+		char last = res.back();
+		for (; i < str.size(); ++i) {
+			char code = _classes[static_cast<unsigned char>(str[i])];
+			if (code && code != last) {
+				res.push_back(code);
+				last = code;
 			}
 		}
 
-		if (str.empty()) {
-			return str;
-		}
-
-		// 2. Starts the calculation of Soundex.
-		it = ++str.insert(it, std::toupper(*it));
-		while (it != str.end()) {
-			switch (*it) {
-				case 'b':
-				case 'p':
-				case 'B':
-				case 'P':
-					if (*(it - 1) != '1') {
-						*it++ = '1';
-					} else {
-						it = str.erase(it);
-					}
-					break;
-				case 'f':
-				case 'v':
-				case 'F':
-				case 'V':
-					if (*(it - 1) != '2') {
-						*it++ = '2';
-					} else {
-						it = str.erase(it);
-					}
-					break;
-				case 'c':
-				case 'k':
-				case 's':
-				case 'C':
-				case 'K':
-				case 'S':
-					if (*(it - 1) != '3') {
-						*it++ = '3';
-					} else {
-						it = str.erase(it);
-					}
-					break;
-				case 'g':
-				case 'j':
-				case 'G':
-				case 'J':
-					if (*(it - 1) != '4') {
-						*it++ = '4';
-					} else {
-						it = str.erase(it);
-					}
-					break;
-				case 'q':
-				case 'x':
-				case 'z':
-				case 'Q':
-				case 'X':
-				case 'Z':
-					if (*(it - 1) != '5') {
-						*it++ = '5';
-					} else {
-						it = str.erase(it);
-					}
-					break;
-				case 'd':
-				case 't':
-				case 'D':
-				case 'T':
-					if (*(it - 1) != '6') {
-						*it++ = '6';
-					} else {
-						it = str.erase(it);
-					}
-					break;
-				case 'l':
-				case 'L':
-					if (*(it - 1) != '7') {
-						*it++ = '7';
-					} else {
-						it = str.erase(it);
-					}
-					break;
-				case 'm':
-				case 'n':
-				case 'M':
-				case 'N':
-					if (*(it - 1) != '8') {
-						*it++ = '8';
-					} else {
-						it = str.erase(it);
-					}
-					break;
-				case 'r':
-				case 'R':
-					if (*(it - 1) != '9') {
-						*it++ = '9';
-					} else {
-						it = str.erase(it);
-					}
-					break;
-				case 'a':
-				case 'e':
-				case 'h':
-				case 'i':
-				case 'o':
-				case 'u':
-				case 'w':
-				case 'y':
-				case 'A':
-				case 'E':
-				case 'H':
-				case 'I':
-				case 'O':
-				case 'U':
-				case 'W':
-				case 'Y':
-					if (*(it - 1) != '0') {
-						*it++ = '0';
-					} else {
-						it = str.erase(it);
-					}
-					break;
-				default:
-					it = str.erase(it);
-					break;
-			}
-		}
-
-		return str;
+		return res;
 	}
 
 	std::string_view _name() const noexcept {
@@ -194,5 +107,5 @@ public:
 
 	template <typename T>
 	SoundexEnglish(T&& str)
-		: Soundex<SoundexEnglish>(_encode(std::string(std::forward<T>(str)))) { }
+		: Soundex<SoundexEnglish>(_encode(std::string_view(std::forward<T>(str)))) { }
 };

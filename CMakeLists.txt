@@ -41,6 +41,15 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
   target_link_libraries(soundex_test PRIVATE soundex)
   add_test(NAME soundex COMMAND soundex_test)
 
+  # Differential test of SoundexEnglish against a frozen copy of the original.
+  add_executable(soundex_diff_test test/diff_test.cc)
+  target_link_libraries(soundex_diff_test PRIVATE soundex)
+  add_test(NAME soundex_diff COMMAND soundex_diff_test)
+
+  # Benchmark against the frozen original (not part of ctest).
+  add_executable(soundex_bench bench/bench.cc)
+  target_link_libraries(soundex_bench PRIVATE soundex)
+
   # A runnable tour of the library (not a test): build & run ./build/soundex_demo
   add_executable(soundex_demo examples/demo.cc)
   target_link_libraries(soundex_demo PRIVATE soundex)

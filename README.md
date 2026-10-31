@@ -85,6 +85,13 @@ Issues and pull requests are welcome. Codes are stored in indexes, so encodings
 must not change; read [AGENTS.md](AGENTS.md) first. CI must pass on every
 platform.
 
+## Performance note
+
+`SoundexEnglish` encodes in one pass into a fresh string through a 256-entry class table
+(`test/diff_test.cc` checks it against the original in-place erase/insert code over every
+string up to four characters of a mixed alphabet plus random strings). `./build/soundex_bench`
+times both.
+
 ## 📄 License
 
 MIT, Copyright (c) 2015-2019 Dubalu LLC. See [LICENSE](LICENSE). Extracted from

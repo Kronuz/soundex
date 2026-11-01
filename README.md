@@ -82,6 +82,24 @@ Not for:
   more spelling rules and alternate pronunciations.
 - Comparing codes across languages: each encoder maps letters to codes by its own rules.
 
+## ⚡ Performance
+
+`soundex_bench` encodes 50,000 pseudo-words of 3 to 12 random lowercase letters with
+`SoundexEnglish::encode`: **16.6 ns** per word on an Apple M4 Pro and **34.1 ns** on an Intel
+Core i9-9980HK, the best of three runs, each the best of nine passes. There is no comparator:
+other Soundex libraries compute the classic four-character code (`R163` for "Robert"), not these
+refined codes, so they return different results. The benchmark also prints the reference
+encoder in `test/frozen.h`, which the differential test checks codes against.
+
+Apple M4 Pro (arm64), macOS 26.7.2, and Intel Core i9-9980HK (x86_64), macOS 15.8.1, both with
+Apple clang 17.0.0 and `-O3 -DNDEBUG`, at `b9d094c` and `9579eeb` (the same English encoder):
+
+```sh
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --target soundex_bench
+./build/soundex_bench
+```
+
 ## 📚 Documentation
 
 - [docs/API.md](docs/API.md): the encoders, their references, and usage.

@@ -12,7 +12,7 @@ include(FetchContent)
 FetchContent_Declare(
   strings
   GIT_REPOSITORY https://github.com/Kronuz/strings.git
-  GIT_TAG        485f882e7fc09775b7ae84930de14289aa9a4aa5
+  GIT_TAG        09d4d1bfbd7dd475cc4c532338fd19beca19dcbe
 )
 FetchContent_MakeAvailable(strings)
 

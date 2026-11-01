@@ -83,7 +83,8 @@ cmake -B build && cmake --build build && ctest --test-dir build
 
 `test/diff_test.cc` checks `SoundexEnglish` against the reference in-place
 erase/insert encoder in `test/frozen.h`, over every string up to four characters of
-a mixed alphabet plus random strings.
+a mixed alphabet plus random strings. `test/copy_move.cc` copies and moves every
+encoder, from non-const lvalues included.
 
 ## 🤝 Contributing
 

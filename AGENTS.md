@@ -14,6 +14,7 @@ french_soundex.h             SoundexFrench (Soundex 2). Header.
 german_soundex.h             SoundexGerman (Kölner Phonetik). Header.
 spanish_soundex.h            SoundexSpanish. Header.
 test/test.cc                 Runnable smoke test: encodes words in all four languages, asserts exact codes.
+test/copy_move.cc            Copies and moves of every encoder (non-const lvalue, const lvalue, rvalue, const rvalue, derived, in containers).
 examples/demo.cc             Runnable tour (not a test): prints encodings per language.
 CMakeLists.txt               INTERFACE library `soundex` (+ alias soundex::soundex); links strings; CTest test `soundex`.
 LICENSE                      MIT, Copyright (c) 2015-2019 Dubalu LLC.
@@ -83,7 +84,10 @@ de-vendors, it keeps that adapter on its own side.
 - **Add a language.** Mirror an existing header: subclass `Soundex<SoundexX>`,
   `friend` the base, define `static const` tables at namespace scope, implement
   private `_encode` / `_name` / `_description`, and the two constructors
-  (default + templated). If you need upper-casing, reuse
+  (default + templated). Constrain the templated constructor with
+  `requires (!soundex_detail::is_encoder_v<T, SoundexX>)`, or a copy from a
+  non-const lvalue picks it and fails to compile; add the encoder to
+  `test/copy_move.cc`. If you need upper-casing, reuse
   `strings::inplace_upper`; don't add a new dependency for it.
 - **Always extend the smoke test.** `test/test.cc` is the only executable check.
   Encode representative words and assert the exact codes. When you can't reason

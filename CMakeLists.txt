@@ -46,6 +46,11 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
   target_link_libraries(soundex_diff_test PRIVATE soundex)
   add_test(NAME soundex_diff COMMAND soundex_diff_test)
 
+  # Copies and moves of every encoder, from non-const lvalues included.
+  add_executable(soundex_copy_test test/copy_move.cc)
+  target_link_libraries(soundex_copy_test PRIVATE soundex)
+  add_test(NAME soundex_copy COMMAND soundex_copy_test)
+
   # Benchmark against the frozen original (not part of ctest).
   add_executable(soundex_bench bench/bench.cc)
   target_link_libraries(soundex_bench PRIVATE soundex)

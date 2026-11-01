@@ -4,6 +4,19 @@ Notable changes to soundex, newest first. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); entries are dated because the
 library has no releases.
 
+## 2026-10-31
+
+### Fixed
+
+- A copy of an encoder from a non-const lvalue (`SoundexEnglish b = a;`, and the same
+  for `SoundexFrench`, `SoundexGerman`, `SoundexSpanish` and the `Soundex<Impl>` base),
+  or from a const rvalue, did not compile: the forwarding constructor that takes a word
+  is a better match than the copy constructor there, and it tried to encode the encoder.
+  It also broke `vector::emplace_back(a)`, `std::make_unique<E>(a)` and `std::optional<E>(a)`
+  with a non-const `a`. The constructor now excludes the encoder's own type, its derived
+  classes and their cv-ref forms (`soundex_detail::is_encoder_v`). Results are unchanged.
+  `test/copy_move.cc` (`soundex_copy`) covers every encoder.
+
 ## 2026-10-30
 
 ### Changed

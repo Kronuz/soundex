@@ -106,6 +106,7 @@ public:
 	SoundexEnglish() = default;
 
 	template <typename T>
+		requires (!soundex_detail::is_encoder_v<T, SoundexEnglish>)
 	SoundexEnglish(T&& str)
 		: Soundex<SoundexEnglish>(_encode(std::string_view(std::forward<T>(str)))) { }
 };

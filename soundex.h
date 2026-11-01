@@ -26,7 +26,20 @@
 #include <algorithm>                              // for std::mismatch
 #include <string>                                 // for std::string
 #include <string_view>                            // for std::string_view
+#include <type_traits>                            // for std::is_base_of_v, std::remove_cvref_t
 #include <utility>                                // for std::forward
+
+
+namespace soundex_detail {
+
+// True when T, without references and cv-qualifiers, is Impl or derives from it.
+// The constructors that encode a word exclude these types: for a non-const lvalue
+// (or a const rvalue), a forwarding constructor would otherwise beat the copy
+// constructor.
+template <typename T, typename Impl>
+inline constexpr bool is_encoder_v = std::is_base_of_v<Impl, std::remove_cvref_t<T>>;
+
+}  // namespace soundex_detail
 
 
 /*
@@ -42,6 +55,7 @@ public:
 	Soundex() = default;
 
 	template <typename T>
+		requires (!soundex_detail::is_encoder_v<T, Soundex>)
 	Soundex(T&& code_str)
 		: _code_str(std::forward<T>(code_str)) { }
 

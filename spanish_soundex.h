@@ -226,6 +226,7 @@ public:
 	SoundexSpanish() = default;
 
 	template <typename T>
+		requires (!soundex_detail::is_encoder_v<T, SoundexSpanish>)
 	SoundexSpanish(T&& str)
 		: Soundex<SoundexSpanish>(_encode(std::string(std::forward<T>(str)))) { }
 };

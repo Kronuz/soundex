@@ -193,6 +193,7 @@ public:
 	SoundexFrench() = default;
 
 	template <typename T>
+		requires (!soundex_detail::is_encoder_v<T, SoundexFrench>)
 	SoundexFrench(T&& str)
 		: Soundex<SoundexFrench>(_encode(std::string(std::forward<T>(str)))) { }
 };

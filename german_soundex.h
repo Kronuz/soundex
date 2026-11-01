@@ -224,6 +224,7 @@ public:
 	SoundexGerman() = default;
 
 	template <typename T>
+		requires (!soundex_detail::is_encoder_v<T, SoundexGerman>)
 	SoundexGerman(T&& str)
 		: Soundex<SoundexGerman>(_encode(std::string(std::forward<T>(str)))) { }
 };

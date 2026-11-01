@@ -38,6 +38,13 @@ templated constructor that runs `_encode` on the input and seeds the base's
 former through the constructor (and reads the stored result back), the latter
 straight through the base's `encode(word)`.
 
+The templated constructor takes a word, never an encoder: it is constrained with
+`requires (!soundex_detail::is_encoder_v<T, Impl>)`, which excludes `Impl`, its
+derived classes and their cv-ref forms. Without it, a copy from a non-const lvalue
+or a const rvalue would pick the forwarding constructor over the copy constructor
+and try to encode the encoder. An encoder is a value: copies and moves keep the
+stored code.
+
 `soundex.h` also carries three free helpers the encoders share: two `replace`
 overloads (a container of `{from, to}` pairs, or an iterator range) that do
 in-place find/replace from a start position, and `replace_prefix`, which swaps a

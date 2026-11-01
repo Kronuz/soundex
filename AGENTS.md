@@ -20,7 +20,6 @@ CMakeLists.txt               INTERFACE library `soundex` (+ alias soundex::sound
 LICENSE                      MIT, Copyright (c) 2015-2019 Dubalu LLC.
 README.md                    What it is, install, quick start.
 docs/API.md                  The four encoders, their references, and usage.
-docs/soundex.d2              The README diagram's source (docs/soundex.svg is rendered from it).
 ARCHITECTURE.md              Internal design: the CRTP base, the four encoders, the delta from Xapiand.
 ```
 

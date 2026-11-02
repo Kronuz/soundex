@@ -10,7 +10,8 @@
 SoundexEnglish("Robert").encode();          // "R901096"
 SoundexEnglish("Rupert").encode();          // "R901096"  (same: they rhyme)
 
-// Reuse one encoder over many words with encode(word).
+// Reuse one encoder over many words with encode(word); word is a string_view,
+// a std::string or a C string, in every language.
 SoundexEnglish en;
 en.encode("Ashcraft");                       // "A03039026"
 

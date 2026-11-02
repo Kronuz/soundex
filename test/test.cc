@@ -11,7 +11,9 @@
 // Build via CMake: cmake -B build && cmake --build build && ctest --test-dir build
 #include <cassert>
 #include <cstdio>
+#include <cstring>
 #include <string>
+#include <string_view>
 
 #include "english_soundex.h"
 #include "french_soundex.h"
@@ -116,11 +118,39 @@ static void test_spanish() {
 }
 
 
+// ---------------------------------------------------------------------------
+// encode() takes a string_view, a std::string or a C string alike, and reads
+// only the view's bytes (it is not NUL-terminated).
+// ---------------------------------------------------------------------------
+
+template <typename Encoder>
+static void check_views(const char* lang, const char* word) {
+	const std::string want = Encoder(word).encode();
+	assert(!want.empty());
+	const Encoder enc;
+	const std::string padded = std::string(word) + "xyz";
+	assert(enc.encode(std::string_view(padded).substr(0, std::strlen(word))) == want);
+	assert(enc.encode(std::string_view(word)) == want);
+	assert(enc.encode(std::string(word)) == want);
+	assert(enc.encode(word) == want);
+	std::printf("  ok [%s] views %s -> %s\n", lang, word, want.c_str());
+}
+
+static void test_views() {
+	check_views<SoundexEnglish>("EN", "Robert");
+	check_views<SoundexFrench>("FR", "Bonjour");
+	check_views<SoundexGerman>("DE", "Wikipedia");
+	check_views<SoundexSpanish>("ES", "Gonzalez");
+	std::printf("views OK\n");
+}
+
+
 int main() {
 	test_english();
 	test_french();
 	test_german();
 	test_spanish();
+	test_views();
 	std::printf("all soundex tests passed\n");
 	return 0;
 }

@@ -65,7 +65,8 @@ class SoundexSpanish : public Soundex<SoundexSpanish> {
 
 	friend class Soundex<SoundexSpanish>;
 
-	std::string _encode(std::string str) const {
+	std::string _encode(std::string_view view) const {
+		std::string str(view);
 		if (str.empty()) {
 			return str;
 		}

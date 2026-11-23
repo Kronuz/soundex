@@ -81,7 +81,7 @@ de-vendors, it keeps that adapter on its own side.
 ## How to extend
 
 - **Add a language.** Mirror an existing header: subclass `Soundex<SoundexX>`,
-  `friend` the base, define `static const` tables at namespace scope, implement
+  `friend` the base, define `inline constexpr` tables at namespace scope, implement
   private `_encode` / `_name` / `_description`, and the two constructors
   (default + templated). Constrain the templated constructor with
   `requires (!soundex_detail::is_encoder_v<T, SoundexX>)`, or a copy from a
@@ -95,12 +95,13 @@ de-vendors, it keeps that adapter on its own side.
 
 ## Traps
 
-- **`static const` tables are per-TU.** Each table (`french_accents`,
-  `german_composed`, ...) is `static const` at namespace scope, so every
-  translation unit including the header gets its own copy, as in Xapiand. That is
-  fine for these small constant maps, but don't be surprised
-  by the duplication, and don't drop the `static` (it would cause ODR clashes
-  across TUs).
+- **Tables are `inline constexpr` arrays.** Each table (`french_accents`,
+  `german_composed`, ...) is an `std::array` of `string_view` pairs, so including a
+  header costs no static initializer and no heap. Keep them constant: a
+  `static const` map or vector brings back an initializer and a copy per TU
+  (`tools/init_size.sh` measures it). The order of the composed and prefix rules is
+  load-bearing. `test/diff_languages.cc` checks the three encoders against the
+  frozen headers in `test/frozen_languages.h`.
 - **Spanish uses `try`/`catch`.** `spanish_soundex.h` catches `std::out_of_range`
   around `str.at(1)` for one-character inputs. That is the only exception path in
   the library and it is pure std, keep it.

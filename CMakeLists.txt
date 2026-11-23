@@ -46,6 +46,12 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
   target_link_libraries(soundex_diff_test PRIVATE soundex)
   add_test(NAME soundex_diff COMMAND soundex_diff_test)
 
+  # Differential test of the French, German and Spanish encoders against frozen
+  # copies of the headers from before their tables became constant arrays.
+  add_executable(soundex_diff_languages_test test/diff_languages.cc)
+  target_link_libraries(soundex_diff_languages_test PRIVATE soundex)
+  add_test(NAME soundex_diff_languages COMMAND soundex_diff_languages_test)
+
   # Copies and moves of every encoder, from non-const lvalues included.
   add_executable(soundex_copy_test test/copy_move.cc)
   target_link_libraries(soundex_copy_test PRIVATE soundex)

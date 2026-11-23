@@ -25,17 +25,16 @@
 
 #include "soundex.h"
 
+#include <array>                 // for std::array, std::to_array
 #include <stdexcept>             // for std::out_of_range
 #include <string>                // for std::string
 #include <string_view>           // for std::string_view
-#include <unordered_map>
-#include <vector>         // for std::vector
-#include <utility>               // for std::forward
+#include <utility>               // for std::forward, std::pair
 
 #include "strings.hh"            // for strings::inplace_upper
 
 
-static const std::unordered_map<std::string, std::string> spanish_accents({
+inline constexpr auto spanish_accents = std::to_array<std::pair<std::string_view, std::string_view>>({
 	{ "Ñ",  "N" }, { "Á",  "A" }, { "É" , "E" }, { "Í",  "I" },
 	{ "Ó",  "O" }, { "Ú",  "U" }, { "À",  "A" }, { "È",  "E" },
 	{ "Ì",  "I" }, { "Ò",  "O" }, { "Ù",  "U" }, { "Ü",  "U" },
@@ -46,7 +45,7 @@ static const std::unordered_map<std::string, std::string> spanish_accents({
 
 
 // Applied in this order, so overlapping rules ("NY" and "YA") code the same on every platform.
-static const std::vector<std::pair<std::string, std::string>> spanish_composed({
+inline constexpr auto spanish_composed = std::to_array<std::pair<std::string_view, std::string_view>>({
 	{ "CH", "V" }, { "QU", "K" }, { "LL", "J" }, { "CE", "S" },
 	{ "CI", "S" }, { "YA", "J" }, { "YE", "J" }, { "YI", "J" },
 	{ "YO", "J" }, { "YU", "J" }, { "GE", "J" }, { "GI", "J" },

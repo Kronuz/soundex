@@ -25,16 +25,15 @@
 
 #include "soundex.h"
 
+#include <array>                 // for std::array, std::to_array
 #include <string>                // for std::string
 #include <string_view>           // for std::string_view
-#include <unordered_map>
-#include <vector>         // for std::vector
-#include <utility>               // for std::forward
+#include <utility>               // for std::forward, std::pair
 
 #include "strings.hh"            // for strings::inplace_upper
 
 
-static const std::unordered_map<std::string, std::string> german_accents({
+inline constexpr auto german_accents = std::to_array<std::pair<std::string_view, std::string_view>>({
 	{ "Ä",  "A" }, { "ä",  "A" }, { "Ö" , "O" }, { "ö",  "O" },
 	{ "Ü",  "U" }, { "ü",  "U" }, { "ß",  "S" }
 });
@@ -42,7 +41,7 @@ static const std::unordered_map<std::string, std::string> german_accents({
 
 // Applied in order: Kölner Phonetik codes C after S or Z, and D or T before C, S, or Z, as
 // 8 before C before A, H, K, O, Q, U, or X as 4 ("Schmidt" is 8602).
-static const std::vector<std::pair<std::string, std::string>> german_composed({
+inline constexpr auto german_composed = std::to_array<std::pair<std::string_view, std::string_view>>({
 	{ "DC", "8" }, { "DS", "8" }, { "DZ", "8" }, { "TC", "8" },
 	{ "TS", "8" }, { "TZ", "8" }, { "SC", "8" }, { "ZC", "8" },
 	{ "KX", "8" }, { "QX", "8" }, { "PH", "3" }, { "CA", "4" },

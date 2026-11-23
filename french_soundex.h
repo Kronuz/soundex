@@ -25,16 +25,15 @@
 
 #include "soundex.h"
 
+#include <array>                 // for std::array, std::to_array
 #include <string>                // for std::string
 #include <string_view>           // for std::string_view
-#include <unordered_map>         // for std::unordered_map
-#include <utility>               // for std::forward
-#include <vector>                // for std::vector
+#include <utility>               // for std::forward, std::pair
 
 #include "strings.hh"            // for strings::inplace_upper
 
 
-static const std::unordered_map<std::string, std::string> french_accents({
+inline constexpr auto french_accents = std::to_array<std::pair<std::string_view, std::string_view>>({
 	{ "Á", "A" }, { "À", "A" }, { "Ä", "A" }, { "Â", "A" }, { "Ã", "A" },
 	{ "É", "E" }, { "È", "E" }, { "Ë", "E" }, { "Ê", "E" }, { "Œ", "E" },
 	{ "Í", "I" }, { "Ì", "I" }, { "Ï", "I" }, { "Î", "I" },
@@ -49,15 +48,15 @@ static const std::unordered_map<std::string, std::string> french_accents({
 });
 
 
-static const std::vector<std::pair<std::string, std::string>> french_composed({
+inline constexpr auto french_composed = std::to_array<std::pair<std::string_view, std::string_view>>({
 	{ "GUI", "KI" }, { "GUE", "KE" }, { "GA",  "KA" },
 	{ "GO",  "KO" }, { "GU",  "K"  }, { "CA",  "KA" },
 	{ "CO",  "KO" }, { "CU",  "KU" }, { "Q",   "K"  },
 	{ "CC",  "K"  }, { "CK",  "K"  }
- });
+});
 
 
-static const std::vector<std::pair<std::string, std::string>> french_prefixes({
+inline constexpr auto french_prefixes = std::to_array<std::pair<std::string_view, std::string_view>>({
 	{ "KN",  "NN"  }, { "PF",  "FF"  }, { "PH",  "FF"  },
 	{ "ASA", "AZA" }, { "SCH", "SSS" }, { "MAC", "MCC" }
 });
@@ -120,7 +119,7 @@ class SoundexFrench : public Soundex<SoundexFrench> {
 		replace_prefix(str, french_prefixes);
 
 		// 7. Replace complementary substitutions.
-		replace(str, 1, french_prefixes.begin(), --french_prefixes.end());
+		replace(str, 1, french_prefixes.begin(), french_prefixes.end() - 1);
 
 		// 8. Remove 'H' unless it is prededed by a 'C' or an 'S' and 'Y' unless it is preceded by 'A'.
 		for (auto it = str.begin(); it != str.end(); ) {

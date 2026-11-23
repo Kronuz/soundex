@@ -61,7 +61,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
   add_executable(soundex_bench bench/bench.cc)
   target_link_libraries(soundex_bench PRIVATE soundex)
 
-  # One TU that only includes the four headers: tools/init_size.sh measures its
+  # One TU that only includes the four headers: test/init_size.sh measures its
   # static initializer and sections (not part of the default build).
   add_library(soundex_include_all OBJECT EXCLUDE_FROM_ALL test/include_all.cc)
   target_link_libraries(soundex_include_all PRIVATE soundex)

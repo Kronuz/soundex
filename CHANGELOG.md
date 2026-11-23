@@ -6,17 +6,6 @@ library has no releases.
 
 Upgrading a pin from before 2026-10-30: [the consumer upgrade note](https://github.com/Kronuz/cpp-libraries/blob/main/docs/UPGRADING-2026-10.md#soundex) lists what changes for callers, how to find affected inputs, the commits not to pin, and the speedup.
 
-## 2026-11-23
-
-### Changed
-
-- The French, German and Spanish tables are `inline constexpr` arrays of `string_view`
-  pairs instead of `static const` maps and vectors, so each including TU no longer runs
-  a static initializer (12,272 bytes for the four headers on arm64 macOS) or holds a heap
-  copy of the tables. Output is identical: `test/diff_languages.cc` compares the encoders
-  with frozen copies of the old headers. The tables change type, so code that used
-  `german_accents` and the like as maps must take them as arrays of pairs.
-
 ## 2026-10-31
 
 ### Fixed

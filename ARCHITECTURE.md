@@ -82,10 +82,10 @@ Each `_encode` is a straight-line transform of the input, returning the code. Th
   `str.at(1)`), catching `std::out_of_range` for one-character inputs.
 
 The per-language tables (`french_accents`, `german_composed`, `spanish_composed`,
-...) are `inline constexpr` arrays of `std::string_view` pairs, defined in each
-header: one definition program-wide, constant-initialized, so including a header
-runs no static initializer and allocates nothing. Each table is applied in
-declaration order, so overlapping rules code a word the same way on every platform.
+...) are `static const` namespace-scope maps/vectors defined in each header. They
+are `static`, so each translation unit that includes the header gets its own copy,
+as in Xapiand. The two-letter rule tables are vectors applied in declaration order,
+so overlapping rules code a word the same way on every platform.
 
 ## Delta from Xapiand
 
